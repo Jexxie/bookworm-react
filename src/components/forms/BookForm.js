@@ -33,18 +33,21 @@ class BookForm extends React.Component {
 
   onChange = e =>
     this.setState({
+      ...this.state,
       data: { ...this.state.data, [e.target.name]: e.target.value }
     });
 
   onChangeNumber = e =>
     this.setState({
+      ...this.state,
       data: {
         ...this.state.data,
         [e.target.name]: parseInt(e.target.value, 10)
       }
     });
 
-  onSubmit = () => {
+  onSubmit = e => {
+    e.preventDefault();
     const errors = this.validate(this.state.data);
     this.setState({ errors });
     if (Object.keys(errors).length === 0) {
@@ -75,7 +78,7 @@ class BookForm extends React.Component {
   };
 
   render() {
-    const { data, errors, loading } = this.state;
+    const { errors, data, loading } = this.state;
 
     return (
       <Segment>
@@ -96,7 +99,7 @@ class BookForm extends React.Component {
                   {errors.title && <InlineError text={errors.title} />}
                 </Form.Field>
 
-                <Form.Field error={!!errors.title}>
+                <Form.Field error={!!errors.authors}>
                   <label htmlFor="authors">Book Authors</label>
                   <input
                     type="text"
@@ -106,10 +109,10 @@ class BookForm extends React.Component {
                     value={data.authors}
                     onChange={this.onChange}
                   />
-                  {errors.title && <InlineError text={errors.title} />}
+                  {errors.authors && <InlineError text={errors.authors} />}
                 </Form.Field>
 
-                <Form.Field error={!!errors.title}>
+                <Form.Field error={!!errors.pages}>
                   <label htmlFor="pages">Pages</label>
                   <input
                     type="number"
@@ -118,7 +121,7 @@ class BookForm extends React.Component {
                     value={data.pages}
                     onChange={this.onChangeNumber}
                   />
-                  {errors.title && <InlineError text={errors.title} />}
+                  {errors.pages && <InlineError text={errors.pages} />}
                 </Form.Field>
               </Grid.Column>
 
@@ -148,7 +151,7 @@ BookForm.propTypes = {
     goodreadsId: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     authors: PropTypes.string.isRequired,
-    covers: PropTypes.arrayOf().isRequired,
+    covers: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     pages: PropTypes.number.isRequired
   }).isRequired
 };
